@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รักเค้าไหม?</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'Prompt', sans-serif;
+    }
+    
+    .heart-float {
+      position: absolute;
+      animation: floatUp 3s ease-out forwards;
+      pointer-events: none;
+      font-size: 24px;
+    }
+    
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-200px) scale(1.5);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.1); }
+    }
+    
+    .love-btn {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .love-btn:hover {
+      animation: heartbeat 0.6s ease-in-out infinite;
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    
+    .sparkle {
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    
+    .fade-in-scale {
+      animation: fadeInScale 0.8s ease-out forwards;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .bounce-text {
+      display: inline-block;
+      animation: bounce 1s ease-in-out infinite;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 25%, #f48fb1 50%, #f06292 75%, #ec407a 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease infinite;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .success-bg {
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 25%, #a5d6a7 50%, #81c784 75%, #66bb6a 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease infinite;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app-wrapper" class="w-full h-full"><!-- Question Page -->
+   <div id="question-page" class="w-full h-full gradient-bg flex flex-col items-center justify-center p-8 relative overflow-hidden"><!-- Decorative Hearts Background -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+     <div class="absolute top-10 left-10 text-6xl opacity-20 sparkle" style="animation-delay: 0s;">
+      💕
+     </div>
+     <div class="absolute top-20 right-20 text-4xl opacity-20 sparkle" style="animation-delay: 0.5s;">
+      💗
+     </div>
+     <div class="absolute bottom-20 left-20 text-5xl opacity-20 sparkle" style="animation-delay: 1s;">
+      💖
+     </div>
+     <div class="absolute bottom-10 right-10 text-6xl opacity-20 sparkle" style="animation-delay: 1.5s;">
+      💘
+     </div>
+     <div class="absolute top-1/3 left-5 text-3xl opacity-20 sparkle" style="animation-delay: 0.3s;">
+      ❤️
+     </div>
+     <div class="absolute top-1/2 right-5 text-4xl opacity-20 sparkle" style="animation-delay: 0.8s;">
+      💝
+     </div>
+    </div><!-- Main Question -->
+    <div class="text-center z-10 mb-12">
+     <div class="text-6xl mb-6">
+      💕
+     </div>
+     <h1 id="main-question" class="text-4xl md:text-6xl font-bold text-white drop-shadow-lg mb-4" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3);">รักเค้าไหม?</h1>
+     <p class="text-white/80 text-lg">เลือกคำตอบของคุณ...</p>
+    </div><!-- Buttons Container -->
+    <div id="buttons-container" class="relative z-10 flex flex-col sm:flex-row gap-6 items-center justify-center w-full max-w-md"><!-- Love Button --> <button id="love-btn" class="love-btn bg-gradient-to-r from-red-400 via-pink-500 to-red-400 text-white font-bold py-4 px-10 rounded-full shadow-2xl hover:shadow-pink-500/50 transition-all duration-300 text-xl flex items-center gap-2 border-4 border-white/30"> <span>💖</span> <span>รัก</span> <span>💖</span> </button> <!-- No Love Button --> <button id="no-love-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-300 text-lg"> ไม่รัก 💔 </button>
+    </div><!-- Hint text -->
+    <p id="hint-text" class="mt-8 text-white/60 text-sm z-10 opacity-0 transition-opacity duration-500">อืม... ลองคิดใหม่อีกทีนะ? 🥺</p>
+   </div><!-- Success Page -->
+   <div id="success-page" class="w-full h-full success-bg flex-col items-center justify-center p-8 relative overflow-hidden hidden"><!-- Floating Hearts Container -->
+    <div id="hearts-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div><!-- Success Content -->
+    <div class="text-center z-10 fade-in-scale">
+     <div class="text-8xl mb-8"><span class="bounce-text" style="animation-delay: 0s;">💕</span> <span class="bounce-text" style="animation-delay: 0.2s;">💗</span> <span class="bounce-text" style="animation-delay: 0.4s;">💕</span>
+     </div>
+     <h1 id="love-message" class="text-3xl md:text-5xl font-bold text-green-800 mb-6" style="text-shadow: 2px 2px 4px rgba(255,255,255,0.5);">เค้าก็รักบีญ่าเหมือนกัน 💚</h1>
+     <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-xl max-w-md mx-auto">
+      <p class="text-green-700 text-xl mb-4">ขอบคุณที่รักเค้านะ 🥰</p>
+      <div class="text-5xl flex justify-center gap-2"><span class="sparkle" style="animation-delay: 0s;">✨</span> <span class="sparkle" style="animation-delay: 0.3s;">💖</span> <span class="sparkle" style="animation-delay: 0.6s;">✨</span>
+      </div>
+     </div><button id="restart-btn" class="mt-8 bg-white/80 hover:bg-white text-green-600 font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-300"> ถามอีกครั้ง 🔄 </button>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_question: 'รักเค้าไหม?',
+      love_message: 'เค้าก็รักบีญ่าเหมือนกัน 💚',
+      background_color: '#fce4ec',
+      button_color: '#ec407a',
+      text_color: '#ffffff'
+    };
+
+    let config = { ...defaultConfig };
+    let noLoveClickCount = 0;
+    let noLoveBtnSize = 100;
+    let loveBtnSize = 100;
+
+    // DOM Elements
+    const questionPage = document.getElementById('question-page');
+    const successPage = document.getElementById('success-page');
+    const loveBtn = document.getElementById('love-btn');
+    const noLoveBtn = document.getElementById('no-love-btn');
+    const hintText = document.getElementById('hint-text');
+    const heartsContainer = document.getElementById('hearts-container');
+    const mainQuestion = document.getElementById('main-question');
+    const loveMessage = document.getElementById('love-message');
+
+    // Show success page
+    function showSuccessPage() {
+      questionPage.classList.add('hidden');
+      successPage.classList.remove('hidden');
+      successPage.classList.add('flex');
+      
+      // Create floating hearts
+      createFloatingHearts();
+    }
+
+    // Create floating hearts animation
+    function createFloatingHearts() {
+      const hearts = ['💕', '💗', '💖', '💘', '❤️', '💝', '💓', '💞'];
+      
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'heart-float';
+          heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          heart.style.left = Math.random() * 100 + '%';
+          heart.style.bottom = '0';
+          heartsContainer.appendChild(heart);
+          
+          setTimeout(() => heart.remove(), 3000);
+        }, i * 200);
+      }
+    }
+
+    // Handle love button click
+    loveBtn.addEventListener('click', () => {
+      showSuccessPage();
+    });
+
+    // Handle no love button click
+    noLoveBtn.addEventListener('click', () => {
+      noLoveClickCount++;
+      
+      // Show hint text
+      hintText.style.opacity = '1';
+      
+      // Shrink no love button
+      noLoveBtnSize = Math.max(0, noLoveBtnSize - 15);
+      noLoveBtn.style.transform = `scale(${noLoveBtnSize / 100})`;
+      noLoveBtn.style.opacity = noLoveBtnSize / 100;
+      
+      // Grow love button
+      loveBtnSize = Math.min(150, loveBtnSize + 8);
+      loveBtn.style.transform = `scale(${loveBtnSize / 100})`;
+      
+      // Move no love button to random position
+      const container = document.getElementById('buttons-container');
+      const containerRect = container.getBoundingClientRect();
+      const randomX = (Math.random() - 0.5) * 200;
+      const randomY = (Math.random() - 0.5) * 100;
+      noLoveBtn.style.position = 'relative';
+      noLoveBtn.style.left = randomX + 'px';
+      noLoveBtn.style.top = randomY + 'px';
+      
+      // Update hint text based on clicks
+      const hints = [
+        'อืม... ลองคิดใหม่อีกทีนะ? 🥺',
+        'แน่ใจเหรอ~? 😢',
+        'ปุ่มหนีไปไหนหมดแล้ว... 😏',
+        'เหลือแค่ปุ่มเดียวแล้วนะ~ 💕',
+        'รักเค้าเถอะน้า~ 🥹'
+      ];
+      hintText.textContent = hints[Math.min(noLoveClickCount - 1, hints.length - 1)];
+      
+      // If button is small enough, hide it and wait for love button click
+      if (noLoveBtnSize <= 15) {
+        noLoveBtn.style.display = 'none';
+        hintText.textContent = 'เหลือแค่ปุ่มเดียวแล้ว... กดรักเค้าเลย! 💖';
+        hintText.classList.add('text-lg', 'font-semibold');
+      }
+    });
+
+    // Restart button
+    document.getElementById('restart-btn').addEventListener('click', () => {
+      // Reset state
+      noLoveClickCount = 0;
+      noLoveBtnSize = 100;
+      loveBtnSize = 100;
+      
+      // Reset buttons
+      noLoveBtn.style.transform = 'scale(1)';
+      noLoveBtn.style.opacity = '1';
+      noLoveBtn.style.display = 'block';
+      noLoveBtn.style.left = '0';
+      noLoveBtn.style.top = '0';
+      loveBtn.style.transform = 'scale(1)';
+      
+      // Reset hint
+      hintText.style.opacity = '0';
+      hintText.classList.remove('text-lg', 'font-semibold');
+      
+      // Show question page
+      successPage.classList.add('hidden');
+      successPage.classList.remove('flex');
+      questionPage.classList.remove('hidden');
+      
+      // Clear hearts
+      heartsContainer.innerHTML = '';
+    });
+
+    // Element SDK Integration
+    async function onConfigChange(newConfig) {
+      config = { ...defaultConfig, ...newConfig };
+      
+      mainQuestion.textContent = config.main_question || defaultConfig.main_question;
+      loveMessage.textContent = config.love_message || defaultConfig.love_message;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_question', config.main_question || defaultConfig.main_question],
+        ['love_message', config.love_message || defaultConfig.love_message]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c59c11ea49e3e68',t:'MTc2OTcwMDQ1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
